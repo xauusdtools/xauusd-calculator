@@ -1,0 +1,17 @@
+{
+  "name": "xauusd-calculator",
+  "version": "0.1.0",
+  "description": "Zero-dependency XAUUSD (gold) pip value, lot size, position size, P/L, risk:reward and margin calculator for Node and the browser.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": { ".": "./src/index.js" },
+  "bin": { "xauusd-calc": "./bin/xauusd-calc.js" },
+  "files": ["src", "bin", "README.md", "LICENSE"],
+  "scripts": { "test": "node --test test/" },
+  "engines": { "node": ">=18" },
+  "keywords": ["xauusd", "gold", "pip-calculator", "lot-size", "position-size", "risk-management", "forex", "trading", "margin-calculator"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/xauusdtools/xauusd-calculator.git" },
+  "bugs": { "url": "https://github.com/xauusdtools/xauusd-calculator/issues" },
+  "homepage": "https://github.com/xauusdtools/xauusd-calculator#readme"
+}

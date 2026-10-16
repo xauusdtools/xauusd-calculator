@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XAUUSD calculator demo</title>
+<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:2rem auto;padding:0 1rem}label{display:block;margin:.4rem 0}input,select{width:9rem}output{display:block;background:#f4f4f4;padding:.8rem;margin-top:1rem;white-space:pre}small{color:#666}</style>
+</head>
+<body>
+<h1>XAUUSD position calculator (demo)</h1>
+<p><small>Assumes 1 lot = 100 oz and 1 pip = $0.10. Check your broker's contract specification.</small></p>
+<form id="f">
+  <label>Balance (USD) <input id="balance" type="number" value="5000" step="any"></label>
+  <label>Risk % <input id="risk" type="number" value="1" step="any"></label>
+  <label>Side <select id="side"><option>buy</option><option>sell</option></select></label>
+  <label>Entry <input id="entry" type="number" value="2400" step="any"></label>
+  <label>Stop <input id="stop" type="number" value="2395" step="any"></label>
+  <label>Target <input id="target" type="number" value="2410" step="any"></label>
+  <label>Leverage (1:x) <input id="lev" type="number" value="100" step="any"></label>
+</form>
+<output id="out"></output>
+<p><small>Educational, hypothetical maths only. Not financial advice. Trading on margin carries a high risk of loss.</small></p>
+<script type="module">
+import { positionSize, pipValue, riskReward, margin, profitLoss } from './src/index.js';
+const $ = (id) => document.getElementById(id);
+function calc() {
+  try {
+    const v = (id) => Number($(id).value), side = $('side').value;
+    const p = positionSize({ balance: v('balance'), riskPct: v('risk'), entry: v('entry'), stop: v('stop'), lotStep: 0.01 });
+    const rr = riskReward(v('entry'), v('stop'), v('target'), side);
+    $('out').textContent =
+`Risk amount:   $${p.riskAmount.toFixed(2)}
+Stop:          ${p.stopDistance.toFixed(2)} (${p.stopPips.toFixed(1)} pips)
+Lot size:      ${p.lots} lots (${p.ounces.toFixed(0)} oz)
+Pip value:     $${pipValue(p.lots).toFixed(2)} per pip
+Risk:reward:   1 : ${rr.ratio.toFixed(2)}
+P/L at target: $${profitLoss(v('entry'), v('target'), p.lots, side).toFixed(2)}
+Margin:        $${margin(p.lots, v('entry'), v('lev')).toFixed(2)}`;
+  } catch (e) { $('out').textContent = 'Error: ' + e.message; }
+}
+$('f').addEventListener('input', calc); calc();
+</script>
+</body>
+</html>
